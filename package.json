@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/bobbydixit/lifeline-desktop/issues"
   },
-  "homepage": "https://github.com/bobbydixit/lifeline-desktop#readme"
+  "homepage": "https://github.com/bobbydixit/lifeline-desktop#readme",
+  "dependencies": {
+    "puppeteer": "^9.1.1"
+  }
 }
