@@ -1,0 +1,19 @@
+{
+  "name": "lifeline-desktop",
+  "version": "1.0.0",
+  "description": "Desktop app for lifeline",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bobbydixit/lifeline-desktop.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bobbydixit/lifeline-desktop/issues"
+  },
+  "homepage": "https://github.com/bobbydixit/lifeline-desktop#readme"
+}
