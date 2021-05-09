@@ -11,7 +11,7 @@ Follow the steps mentioned below to run the program
 - Using Git - git clone https://github.com/bobbydixit/lifeline-desktop.git
 - Download Zip - GoTo https://github.com/bobbydixit/lifeline-desktop -> click on download code -> click on download as zip
 
-### Setup the eng 
+### Setup the env
 Update config.json
 - userPhoneNumber - your phone number without country code
 - beneficiaryId - beneficiary id in cowin 
