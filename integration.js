@@ -158,7 +158,7 @@ async function evaluateForSelectionButton() {
 
 export async function fillPinCodeAndMarkForBooking(pinCode) {
   console.log("searching pincode");
-  await currentPage.type(selectors.pincodeInput, pinCode);
+  await currentPage.type(selectors.pincodeInput, pinCode.toString());
   await currentPage.click(selectors.pinSearchButton);
   console.log("pincode search clicked");
   currentState.pauseTillToBookSlot = Date.now() + config.lockInPeriod;

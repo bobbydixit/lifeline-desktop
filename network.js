@@ -75,7 +75,6 @@ export async function fetchOtp(mobileNumber, requestedAt) {
 }
 
 export async function publishEvent(mobileNumber, centerDetails) {
-  console.log(`{"mobileNumber":${mobileNumber},"requestedAt":${requestedAt}}`);
   const response = await _fetch(
     config.lifeLineBackend + "/submit/notification",
     {
@@ -113,11 +112,11 @@ export async function getSchedule(auth) {
     .format("DD-MM-YYYY");
   await sleep(Math.floor(Math.random() * (3000 - 500 + 1) + 500));
   console.log(
-    `https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id=${config.districtId}&date=${presentDate}`
+    `${config.cowinBackend}/api/v2/appointment/sessions/calendarByDistrict?district_id=${config.districtId}&date=${presentDate}`
   );
   console.log(auth);
   const response = await _fetch(
-    `${cowinBackend}/api/v2/appointment/sessions/calendarByDistrict?district_id=${config.districtId}&date=${presentDate}`,
+    `${config.cowinBackend}/api/v2/appointment/sessions/calendarByDistrict?district_id=${config.districtId}&date=${presentDate}`,
     {
       headers: {
         "content-type": "application/json",
