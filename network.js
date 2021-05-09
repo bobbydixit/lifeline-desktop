@@ -163,7 +163,7 @@ function sessionFilter(sessions) {
   return sessions.filter((session) => {
     if (
       parseInt(session.available_capacity) > 0 &&
-      parseInt(session.min_age_limit) < 45
+      parseInt(session.min_age_limit) <= 45
     ) {
       return true;
     }
