@@ -6,6 +6,6 @@ export default {
   districtId: 294,
   lockInPeriod: 300000,
   tokenValidity: 900000,
-  lifeLineBackend: "http://localhost:5000",
+  lifeLineBackend: "https://rocky-eyrie-37601.herokuapp.com",
   cowinBackend: "https://cdn-api.co-vin.in",
 };
