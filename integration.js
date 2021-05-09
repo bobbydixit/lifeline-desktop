@@ -132,15 +132,15 @@ async function takeUserToAppointmentScreen() {
   if (currentState.currentBrowserState != BrowserState.AT_DASHBOARD) return;
   console.log("executing evaluate");
   console.log(config);
-  await currentPage.evaluate(evaluateForSelectionButton);
+  await currentPage.evaluate(evaluateForSelectionButton, config.beneficiaryId);
   await currentPage.click(selectors.scheduleAppointmentButton);
 }
 
-async function evaluateForSelectionButton() {
+async function evaluateForSelectionButton(beneficiaryId) {
   let nameBlocks1 = document.getElementsByClassName("name-block");
   let toBeUsedBlock;
   for (i = 0; i < nameBlocks1.length; i++) {
-    if (nameBlocks1[i].children[1].innerText.includes("68523756272920")) {
+    if (nameBlocks1[i].children[1].innerText.includes(beneficiaryId)) {
       console.log("found");
       console.log(i);
       toBeUsedBlock = i;

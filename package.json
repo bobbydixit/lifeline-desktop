@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/bobbydixit/lifeline-desktop#readme",
   "dependencies": {
+    "fs": "0.0.1-security",
     "moment-timezone": "^0.5.33",
     "node-fetch": "^2.6.1",
     "puppeteer": "^9.1.1"
