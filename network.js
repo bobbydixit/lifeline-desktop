@@ -1,8 +1,5 @@
 import fetch from "node-fetch";
-
-const NetworkEndpoint = {
-  lifeLineBackend: "http://localhost:5000",
-};
+import config from "./config.js";
 
 function _fetch(url, opts = {}, auth = true) {
   let { headers = {}, ...restOpts } = opts;
@@ -47,8 +44,9 @@ function _fetch(url, opts = {}, auth = true) {
 }
 
 export async function fetchOtp(mobileNumber, requestedAt) {
+  console.log(`{"mobileNumber":${mobileNumber},"requestedAt":${requestedAt}}`);
   const response = await _fetch(
-    NetworkEndpoint.lifeLineBackend + "/fetch/otp",
+    config.lifeLineBackend + "/fetch/otp",
     {
       headers: {
         "content-type": "application/json",

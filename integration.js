@@ -40,7 +40,7 @@ let defaultState = {
   pauseTillToBookSlot: 0,
   otpValidFor: 0,
   currentBeneficiaries: [],
-  requestedAt: 0,
+  otpRequestedAt: 0,
 };
 
 let currentBrowser;
@@ -109,7 +109,7 @@ async function requestInterceptor(interceptedResponse) {
   } else if (request.url().endsWith("/generateMobileOTP")) {
     console.log("otp submitted");
     currentState.currentBrowserState = BrowserState.WAITING_FOR_OTP;
-    currentState.requestedAt = Date.now();
+    currentState.otpRequestedAt = Date.now();
     currentState.otpValidFor = Date.now() + OTP_VALID_FOR;
   }
 }
@@ -127,11 +127,8 @@ function updateAuthAndBeneficiaries(beneficiaries, auth) {
 
 async function processOtp(otp) {
   console.log("attempting to process otp")
-  await currentPage.type(selectors.otpInput, otp);
-  await Promise.all([
-    currentPage.waitForNavigation(),
-    currentPage.click(selectors.verifyOtpButton),
-  ]);
+  await currentPage.type(selectors.otpInput, otp.toString());
+  await currentPage.click(selectors.verifyOtpButton);
 }
 
 export function isIntegrationLocked() {
@@ -146,8 +143,12 @@ export async function isSessionValid() {
       case BrowserState.WAITING_FOR_OTP:
         if (currentState.otpValidFor > Date.now()) {
           // fetch latest otp and attempt submit
-          const otp = await fetchOtp();
+          const otp = await fetchOtp(
+            config.userPhoneNumber,
+            currentState.otpRequestedAt
+          );
           if (otp) {
+            console.log(otp);
             await processOtp(otp);
           }
         } else {
