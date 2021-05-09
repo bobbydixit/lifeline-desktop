@@ -6,10 +6,11 @@ const OTP_VALID_FOR = 120000;
 const selectors = {
   mobileInput: "input[appmobilenumber=true]",
   pincodeInput: 'input[appinputchar="pincode"]',
-  getOtp: "ion-button",
+  pinSearchButton: ".pin-search-btn",
+  getOtp: ".next-btn",
   otpInput: "#mat-input-1",
   verifyOtpButton: "ion-button",
-  scheduleAppointmentButton: "register-btn schedule-appointment",
+  scheduleAppointmentButton: ".schedule-appointment",
 };
 
 const BrowserState = {
@@ -20,18 +21,14 @@ const BrowserState = {
   AT_APPOINTMENT: 5,
 };
 
-const UrlToBrowserStateMapping = {
-  "https://selfregistration.cowin.gov.in": [
-    BrowserState.HOME,
-    BrowserState.WAITING_FOR_OTP,
-  ],
-  "https://selfregistration.cowin.gov.in/dashboard": BrowserState.AT_DASHBOARD,
-  "https://selfregistration.cowin.gov.in/appointment":
-    BrowserState.AT_APPOINTMENT,
+const UrlToLoginStatusMapping = {
+  "https://selfregistration.cowin.gov.in/": false,
+  "https://selfregistration.cowin.gov.in/dashboard": true,
+  "https://selfregistration.cowin.gov.in/appointment": true,
 };
 
 Object.freeze(BrowserState);
-Object.freeze(UrlToBrowserStateMapping);
+Object.freeze(UrlToLoginStatusMapping);
 
 let defaultState = {
   currentBrowserState: BrowserState.NOT_OPEN,
@@ -39,7 +36,6 @@ let defaultState = {
   token: "",
   pauseTillToBookSlot: 0,
   otpValidFor: 0,
-  currentBeneficiaries: [],
   otpRequestedAt: 0,
 };
 
@@ -62,12 +58,10 @@ async function wasBrowserKilled() {
   return false;
 }
 
-async function validateCurrentBrowserState() {
+async function validateUserIsLoggedIn() {
   const url = await currentPage.url();
-  return (
-    UrlToBrowserStateMapping[url] &&
-    UrlToBrowserStateMapping[url].includes(currentState.currentBrowserState)
-  );
+  console.log(url);
+  return UrlToLoginStatusMapping[url];
 }
 
 async function restartLoginJourney() {
@@ -106,11 +100,15 @@ async function requestInterceptor(interceptedResponse) {
     console.log(auth);
     const response = await interceptedResponse.json();
     updateAuthAndBeneficiaries(response.beneficiaries, auth);
+    currentState.currentBrowserState = BrowserState.AT_DASHBOARD;
   } else if (request.url().endsWith("/generateMobileOTP")) {
     console.log("otp submitted");
     currentState.currentBrowserState = BrowserState.WAITING_FOR_OTP;
     currentState.otpRequestedAt = Date.now();
     currentState.otpValidFor = Date.now() + OTP_VALID_FOR;
+  } else if (request.url().endsWith("/states")) {
+    console.log("states called");
+    currentState.currentBrowserState = BrowserState.AT_APPOINTMENT;
   }
 }
 
@@ -119,16 +117,45 @@ function updateAuthAndBeneficiaries(beneficiaries, auth) {
     console.log("updating beneficiaries and token to ");
     console.log(beneficiaries);
     console.log(auth);
-    currentState.currentBeneficiaries = beneficiaries;
     currentState.token = auth;
     currentState.tokenValidity = Date.now() + config.tokenValidity;
   }
 }
 
 async function processOtp(otp) {
-  console.log("attempting to process otp")
+  console.log("attempting to process otp");
   await currentPage.type(selectors.otpInput, otp.toString());
   await currentPage.click(selectors.verifyOtpButton);
+}
+
+async function takeUserToAppointmentScreen() {
+  if (currentState.currentBrowserState != BrowserState.AT_DASHBOARD) return;
+  console.log("executing evaluate");
+
+  // document.getElementsByClassName("name-block")[0].children[1].innerText;
+  // document
+  //   .getElementsByClassName("cardblockcls md hydrated")[2]
+  //   .children[4].children[1].children[0].children[0].children[0].click();
+  await currentPage.evaluate(() => {
+    let nameBlocks1 = document.getElementsByClassName("name-block");
+    let toBeUsedBlock;
+    for (i = 0; i < nameBlocks1.length; i++) {
+      if (nameBlocks1[i].children[1].innerText.includes("68523756272920")) {
+        console.log("found");
+        console.log(i);
+        toBeUsedBlock = i;
+      }
+    }
+    if (toBeUsedBlock == undefined) {
+      console.log("entity Not Found");
+      // throw exception
+    }
+    document
+      .getElementsByClassName("cardblockcls md hydrated")
+      [toBeUsedBlock].querySelector(".dose-data")
+      .children[1].children[0].children[0].children[0].click();
+  });
+  await currentPage.click(selectors.scheduleAppointmentButton);
 }
 
 export function isIntegrationLocked() {
@@ -163,4 +190,11 @@ export async function isSessionValid() {
 
     return false;
   }
+  const userLoggedIn = await validateUserIsLoggedIn();
+  if (!userLoggedIn) {
+    await restartLoginJourney();
+    return false;
+  }
+  await takeUserToAppointmentScreen();
+  return true;
 }

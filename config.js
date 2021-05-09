@@ -1,5 +1,5 @@
 export default {
-  userPhoneNumber: "8123327942",
+  userPhoneNumber: "8123327941",
   pollFrequency: 15000,
   beneficiaryId: "68523756272920",
   dose: 1,
