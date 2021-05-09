@@ -20,9 +20,11 @@ async function handleSchedule() {
       const token = getAuthToken();
       console.log("appointment is valid");
       const centers = await getSchedule(token);
-      const center = centers[0];
-      await publishEvent(config.userPhoneNumber, center);
-      await fillPinCodeAndMarkForBooking(center.pincode);
+      if (centers.length > 0) {
+        const center = centers[0];
+        await publishEvent(config.userPhoneNumber, center);
+        await fillPinCodeAndMarkForBooking(center.pincode);
+      }
     }
   } catch (e) {
     console.log(e);
