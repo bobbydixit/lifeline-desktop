@@ -1,12 +1,13 @@
 import fetch from "node-fetch";
 import config from "./config.js";
+import moment from "moment-timezone";
+import {sleep} from "./utils.js"
 
 function _fetch(url, opts = {}, auth = true) {
   let { headers = {}, ...restOpts } = opts;
   if (auth == true) {
     headers = {
       ...headers,
-      authorization: "Bearer " + utilCurrentState.token,
     };
 
     restOpts = {
@@ -71,4 +72,101 @@ export async function fetchOtp(mobileNumber, requestedAt) {
     console.log(`otp not found and it returned status ${response.status}`);
     return "";
   }
+}
+
+export async function publishEvent(mobileNumber, centerDetails) {
+  console.log(`{"mobileNumber":${mobileNumber},"requestedAt":${requestedAt}}`);
+  const response = await _fetch(
+    config.lifeLineBackend + "/submit/notification",
+    {
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        type: "BOOKING_AVAILABLE",
+        mobileNumber: mobileNumber,
+        centerDetails: centerDetails,
+      }),
+      method: "POST",
+    },
+    false
+  ).catch((e) => {
+    console.log(e);
+    return e;
+  });
+  if (response.status && response.status === 200) {
+    const json = await response.json();
+    if (json.success == true) {
+      console.log("Publish event succeded");
+      return true;
+    }
+    return false;
+  } else {
+    console.log("Publish event failed");
+    return false;
+  }
+}
+
+export async function getSchedule(auth) {
+  const presentDate = moment(new Date())
+    .tz("Asia/Kolkata")
+    .format("DD-MM-YYYY");
+  await sleep(Math.floor(Math.random() * (3000 - 500 + 1) + 500));
+  console.log(
+    `https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id=${config.districtId}&date=${presentDate}`
+  );
+  console.log(auth);
+  const response = await _fetch(
+    `${cowinBackend}/api/v2/appointment/sessions/calendarByDistrict?district_id=${config.districtId}&date=${presentDate}`,
+    {
+      headers: {
+        "content-type": "application/json",
+        authorization: auth,
+      },
+    }
+  ).catch((e) => {
+    console.log(e);
+    return e;
+  });
+  const json = await response.json();
+  if (json.centers) {
+    const centers = processCenters(json.centers);
+    console.log("processed centers ");
+    console.log(centers);
+    return centers;
+  } else {
+    console.log(`schedule failed with response ${json}`);
+    console.log(JSON.stringify(json));
+    return [];
+  }
+}
+
+function processCenters(centers) {
+  if (!centers) {
+    console.log(`centers dont exist ${centers}`);
+  }
+  centers = centers.map((center) => {
+    let sessions = center.sessions;
+    // console.log(sessions)
+    return {
+      ...center,
+      sessions: sessionFilter(sessions),
+    };
+  });
+  centers = centers.filter((center) => {
+    return center.sessions.length > 0;
+  });
+  return centers;
+}
+
+function sessionFilter(sessions) {
+  return sessions.filter((session) => {
+    if (
+      parseInt(session.available_capacity) > 0 &&
+      parseInt(session.min_age_limit) < 45
+    ) {
+      return true;
+    }
+    return false;
+  });
 }

@@ -158,8 +158,20 @@ async function takeUserToAppointmentScreen() {
   await currentPage.click(selectors.scheduleAppointmentButton);
 }
 
+export async function fillPinCodeAndMarkForBooking(pinCode) {
+  console.log("searching pincode");
+  await currentPage.type(selectors.pincodeInput, pinCode);
+  await currentPage.click(selectors.pinSearchButton);
+  console.log("pincode search clicked");
+  currentState.pauseTillToBookSlot  = Date.now() + config.lockInPeriod;
+}
+
 export function isIntegrationLocked() {
   return currentState.pauseTillToBookSlot > Date.now();
+}
+
+export function getAuthToken() {
+  return currentState.token;
 }
 
 export async function isSessionValid() {

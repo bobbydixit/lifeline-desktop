@@ -7,4 +7,5 @@ export default {
   lockInPeriod: 300000,
   tokenValidity: 900000,
   lifeLineBackend: "http://localhost:5000",
+  cowinBackend: "https://cdn-api.co-vin.in",
 };
