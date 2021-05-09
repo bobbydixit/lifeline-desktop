@@ -131,31 +131,29 @@ async function processOtp(otp) {
 async function takeUserToAppointmentScreen() {
   if (currentState.currentBrowserState != BrowserState.AT_DASHBOARD) return;
   console.log("executing evaluate");
-
-  // document.getElementsByClassName("name-block")[0].children[1].innerText;
-  // document
-  //   .getElementsByClassName("cardblockcls md hydrated")[2]
-  //   .children[4].children[1].children[0].children[0].children[0].click();
-  await currentPage.evaluate(() => {
-    let nameBlocks1 = document.getElementsByClassName("name-block");
-    let toBeUsedBlock;
-    for (i = 0; i < nameBlocks1.length; i++) {
-      if (nameBlocks1[i].children[1].innerText.includes("68523756272920")) {
-        console.log("found");
-        console.log(i);
-        toBeUsedBlock = i;
-      }
-    }
-    if (toBeUsedBlock == undefined) {
-      console.log("entity Not Found");
-      // throw exception
-    }
-    document
-      .getElementsByClassName("cardblockcls md hydrated")
-      [toBeUsedBlock].querySelector(".dose-data")
-      .children[1].children[0].children[0].children[0].click();
-  });
+  console.log(config);
+  await currentPage.evaluate(evaluateForSelectionButton);
   await currentPage.click(selectors.scheduleAppointmentButton);
+}
+
+async function evaluateForSelectionButton() {
+  let nameBlocks1 = document.getElementsByClassName("name-block");
+  let toBeUsedBlock;
+  for (i = 0; i < nameBlocks1.length; i++) {
+    if (nameBlocks1[i].children[1].innerText.includes("68523756272920")) {
+      console.log("found");
+      console.log(i);
+      toBeUsedBlock = i;
+    }
+  }
+  if (toBeUsedBlock == undefined) {
+    console.log("entity Not Found");
+    throw "Beneficiary Not Found";
+  }
+  document
+    .getElementsByClassName("cardblockcls md hydrated")
+    [toBeUsedBlock].querySelector(".dose-data")
+    .children[1].children[0].children[0].children[0].click();
 }
 
 export async function fillPinCodeAndMarkForBooking(pinCode) {
@@ -163,7 +161,7 @@ export async function fillPinCodeAndMarkForBooking(pinCode) {
   await currentPage.type(selectors.pincodeInput, pinCode);
   await currentPage.click(selectors.pinSearchButton);
   console.log("pincode search clicked");
-  currentState.pauseTillToBookSlot  = Date.now() + config.lockInPeriod;
+  currentState.pauseTillToBookSlot = Date.now() + config.lockInPeriod;
 }
 
 export function isIntegrationLocked() {
