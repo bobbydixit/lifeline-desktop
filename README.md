@@ -17,12 +17,14 @@ Update config.json
 - beneficiaryId - beneficiary id in cowin 
 - districtId - your districtId, please approach owner to find your districtId
 
+run `npm i` to install all dependencies 
+
 ### Run 
 Please follow the following steps to run
 - Get your mobile number whitelisted by the owner
 - Open the android app shared by the owner
 - Enter phone number on lifeline app
-- Run node schedule.js on desktop
+- Run `node schedule.js` on desktop
 - Let process run in background
 
 
