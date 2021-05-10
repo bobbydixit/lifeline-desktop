@@ -34,7 +34,10 @@ Please follow the following steps to run
 - Run `node schedule.js` on desktop
 - Let process run in background
 
+### How to terminate node js app
 
+- Mac `Ctrl + C`
+- Windows `Ctrl + C`
 
 
 
