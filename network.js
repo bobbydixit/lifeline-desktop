@@ -146,7 +146,6 @@ function processCenters(centers) {
   }
   centers = centers.map((center) => {
     let sessions = center.sessions;
-    // console.log(sessions)
     return {
       ...center,
       sessions: sessionFilter(sessions),
@@ -161,9 +160,10 @@ function processCenters(centers) {
 function sessionFilter(sessions) {
   return sessions.filter((session) => {
     if (
-      parseInt(session.available_capacity) > 0 &&
+      parseInt(session.available_capacity) > config.minimumAvailability &&
       parseInt(session.min_age_limit) < 45
     ) {
+        console.log("Session: ", session)
       return true;
     }
     return false;

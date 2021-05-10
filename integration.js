@@ -132,8 +132,14 @@ async function takeUserToAppointmentScreen() {
   if (currentState.currentBrowserState != BrowserState.AT_DASHBOARD) return;
   console.log("executing evaluate");
   console.log(config);
-  await currentPage.evaluate(evaluateForSelectionButton, config.beneficiaryId);
+  await selectAllBeneficiary(config.beneficiaryIds);
   await currentPage.click(selectors.scheduleAppointmentButton);
+}
+
+async function selectAllBeneficiary(beneficiaries){
+  beneficiaries.forEach(benefId=> {
+    currentPage.evaluate(evaluateForSelectionButton, benefId);
+  });
 }
 
 async function evaluateForSelectionButton(beneficiaryId) {
