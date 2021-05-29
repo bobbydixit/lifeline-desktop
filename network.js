@@ -111,17 +111,15 @@ export async function publishEvent(mobileNumber, centerDetails) {
   }
 }
 
-export async function getSchedule(auth) {
-  const presentDate = config.date ? config.date : moment(new Date())
-    .tz("Asia/Kolkata")
-    .format("DD-MM-YYYY");
-  await sleep(Math.floor(Math.random() * (3000 - 500 + 1) + 500));
+export async function getSchedule(auth, date, districtId) {
+
+  await sleep(Math.floor(Math.random() * (1000 - 250 + 1) + 250));
   console.log(
-    `${config.cowinBackend}/api/v2/appointment/sessions/calendarByDistrict?district_id=${config.districtId}&date=${presentDate}`
+    `${config.cowinBackend}/api/v2/appointment/sessions/calendarByDistrict?district_id=${districtId}&date=${date}`
   );
   console.log(auth);
   const response = await _fetch(
-    `${config.cowinBackend}/api/v2/appointment/sessions/calendarByDistrict?district_id=${config.districtId}&date=${presentDate}`,
+    `${config.cowinBackend}/api/v2/appointment/sessions/calendarByDistrict?district_id=${districtId}&date=${date}`,
     {
       headers: {
         "content-type": "application/json",

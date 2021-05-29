@@ -209,7 +209,6 @@ export async function isSessionValid() {
   if (currentState.tokenValidity < Date.now()) {
     console.log("token expired");
     console.log(currentState.currentBrowserState);
-    
     switch (currentState.currentBrowserState) {
       case BrowserState.WAITING_FOR_OTP:
         if (currentState.otpValidFor > Date.now()) {

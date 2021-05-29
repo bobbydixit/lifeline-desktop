@@ -1,4 +1,3 @@
-import moment from "moment-timezone";
 export default {
   userPhoneNumber: "8123327941",
   pollFrequency: 5000,
@@ -6,7 +5,7 @@ export default {
   dose: 1,
   vaccines: ["COVAXIN", "COVISHIELD"],
   date: undefined,
-  districtId: 294,
+  districtIds: [294, 265],
   lockInPeriod: 300000,
   tokenValidity: 900000,
   minimumAvailability: 1,
