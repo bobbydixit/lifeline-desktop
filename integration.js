@@ -37,6 +37,7 @@ let defaultState = {
   pauseTillToBookSlot: 0,
   otpValidFor: 0,
   otpRequestedAt: 0,
+  pincodeEntered: true,
 };
 
 let currentBrowser;
@@ -133,7 +134,9 @@ async function takeUserToAppointmentScreen() {
   console.log("executing evaluate");
   console.log(config);
   await selectAllBeneficiary(config.beneficiaryIds);
-  await currentPage.click(selectors.scheduleAppointmentButton);
+  if(config.dose == 1) {
+    await currentPage.click(selectors.scheduleAppointmentButton);
+  }
 }
 
 async function selectAllBeneficiary(beneficiaries){
@@ -156,10 +159,20 @@ async function evaluateForSelectionButton(beneficiaryId) {
     console.log("entity Not Found");
     throw "Beneficiary Not Found";
   }
+
+  const childIndex =
+    document.getElementsByClassName("cardblockcls md hydrated")[toBeUsedBlock]
+      .children.length - 1;
+
   document
     .getElementsByClassName("cardblockcls md hydrated")
-    [toBeUsedBlock].querySelector(".dose-data")
-    .children[1].children[0].children[0].children[0].click();
+    [toBeUsedBlock]
+    .children[childIndex]
+    .children[1]
+    .children[0]
+    .children[0]
+    .children[0]
+    .click();
 }
 
 export async function fillPinCodeAndMarkForBooking(pinCode) {
@@ -167,6 +180,7 @@ export async function fillPinCodeAndMarkForBooking(pinCode) {
   await currentPage.type(selectors.pincodeInput, pinCode.toString());
   await currentPage.click(selectors.pinSearchButton);
   console.log("pincode search clicked");
+  currentState.pincodeEntered = true;
   currentState.pauseTillToBookSlot = Date.now() + config.lockInPeriod;
 }
 
@@ -176,6 +190,14 @@ export function isIntegrationLocked() {
 
 export function getAuthToken() {
   return currentState.token;
+}
+
+async function refreshIfNeeded() {
+  if(currentState.pincodeEntered) {
+    await currentPage.reload({
+    });
+    currentState.pincodeEntered = false;
+  }
 }
 
 export async function isSessionValid() {
@@ -212,5 +234,6 @@ export async function isSessionValid() {
     return false;
   }
   await takeUserToAppointmentScreen();
+  await refreshIfNeeded();
   return true;
 }

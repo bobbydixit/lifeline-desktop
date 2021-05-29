@@ -3,6 +3,11 @@ import config from "./config.js";
 import moment from "moment-timezone";
 import {sleep} from "./utils.js"
 
+const availableCapacityParameter = {
+  1: "available_capacity_dose1",
+  2: "available_capacity_dose2",
+};
+
 function _fetch(url, opts = {}, auth = true) {
   let { headers = {}, ...restOpts } = opts;
   if (auth == true) {
@@ -107,7 +112,7 @@ export async function publishEvent(mobileNumber, centerDetails) {
 }
 
 export async function getSchedule(auth) {
-  const presentDate = moment(new Date())
+  const presentDate = config.date ? config.date : moment(new Date())
     .tz("Asia/Kolkata")
     .format("DD-MM-YYYY");
   await sleep(Math.floor(Math.random() * (3000 - 500 + 1) + 500));
@@ -160,10 +165,11 @@ function processCenters(centers) {
 function sessionFilter(sessions) {
   return sessions.filter((session) => {
     if (
-      parseInt(session.available_capacity) > config.minimumAvailability &&
-      parseInt(session.min_age_limit) < 45
+      parseInt(session[availableCapacityParameter[config.dose]]) >
+        config.minimumAvailability &&
+      parseInt(session.min_age_limit) <= config.minAge
     ) {
-        console.log("Session: ", session)
+      console.log("Session: ", session);
       return true;
     }
     return false;

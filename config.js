@@ -1,12 +1,16 @@
+import moment from "moment-timezone";
 export default {
-  userPhoneNumber: "8087701802",
+  userPhoneNumber: "8123327941",
   pollFrequency: 5000,
-  beneficiaryIds: ["62567579758770","33693518495220"],
+  beneficiaryIds: ["63597472181760"],
   dose: 1,
+  vaccine: ["COVAXIN", "COVISHIELD"],
+  date: undefined,
   districtId: 294,
-  lockInPeriod: 180000,
+  lockInPeriod: 300000,
   tokenValidity: 900000,
-  minimumAvailability: 15,
+  minimumAvailability: 1,
+  minAge: 27,
   lifeLineBackend: "https://rocky-eyrie-37601.herokuapp.com",
   cowinBackend: "https://cdn-api.co-vin.in",
 };
