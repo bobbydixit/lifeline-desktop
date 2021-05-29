@@ -4,7 +4,7 @@ export default {
   pollFrequency: 5000,
   beneficiaryIds: ["63597472181760"],
   dose: 1,
-  vaccine: ["COVAXIN", "COVISHIELD"],
+  vaccines: ["COVAXIN", "COVISHIELD"],
   date: undefined,
   districtId: 294,
   lockInPeriod: 300000,

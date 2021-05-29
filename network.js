@@ -167,7 +167,8 @@ function sessionFilter(sessions) {
     if (
       parseInt(session[availableCapacityParameter[config.dose]]) >=
         config.minimumAvailability &&
-      parseInt(session.min_age_limit) <= config.minAge
+      parseInt(session.min_age_limit) <= config.minAge &&
+      config.vaccines.includes(session.vaccine)
     ) {
       console.log("Session: ", session);
       return true;
