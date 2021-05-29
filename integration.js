@@ -1,6 +1,8 @@
 import puppeteer from "puppeteer";
 import { sleep } from "./utils.js";
 import { fetchOtp } from "./network.js";
+import player from "play-sound";
+const playerInitialized = player({});
 import config from "./config.js";
 const OTP_VALID_FOR = 120000;
 const selectors = {
@@ -182,6 +184,9 @@ export async function fillPinCodeAndMarkForBooking(pinCode) {
   console.log("pincode search clicked");
   currentState.pincodeEntered = true;
   currentState.pauseTillToBookSlot = Date.now() + config.lockInPeriod;
+  playerInitialized.play("alert.mp3", function (err) {
+    if (err) console.log(err);
+  });
 }
 
 export function isIntegrationLocked() {
@@ -204,6 +209,7 @@ export async function isSessionValid() {
   if (currentState.tokenValidity < Date.now()) {
     console.log("token expired");
     console.log(currentState.currentBrowserState);
+    
     switch (currentState.currentBrowserState) {
       case BrowserState.WAITING_FOR_OTP:
         if (currentState.otpValidFor > Date.now()) {
@@ -228,6 +234,7 @@ export async function isSessionValid() {
 
     return false;
   }
+  
   const userLoggedIn = await validateUserIsLoggedIn();
   if (!userLoggedIn) {
     await restartLoginJourney();
