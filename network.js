@@ -165,7 +165,7 @@ function processCenters(centers) {
 function sessionFilter(sessions) {
   return sessions.filter((session) => {
     if (
-      parseInt(session[availableCapacityParameter[config.dose]]) >
+      parseInt(session[availableCapacityParameter[config.dose]]) >=
         config.minimumAvailability &&
       parseInt(session.min_age_limit) <= config.minAge
     ) {
