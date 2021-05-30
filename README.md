@@ -31,7 +31,7 @@ Please follow the following steps to run
 - Enter phone number on lifeline app
 - Click on submit on the app
 - Wait for app to be initialized
-- Run `node schedule.js` on desktop
+- Run `node schedular.js` on desktop
 - Let process run in background
 
 ### How to terminate node js app
