@@ -1,3 +1,4 @@
+import moment from "moment-timezone";
 import {
   isIntegrationLocked,
   isSessionValid,
@@ -8,7 +9,7 @@ import { getSchedule, publishEvent } from "./network.js";
 import { watch } from "./utils.js";
 import config from "./config.js";
 
-let nextSearchIndex = 0
+let nextSearchIndex = 0;
 
 function updateNextSearchIndex() {
   nextSearchIndex = nextSearchIndex + 1;
@@ -28,9 +29,9 @@ async function handleSchedule() {
       console.log("session is valid");
       const token = getAuthToken();
       console.log("appointment is valid");
-        const presentDate = config.date
-          ? config.date
-          : moment(new Date()).tz("Asia/Kolkata").format("DD-MM-YYYY");
+      const presentDate = config.date
+        ? config.date
+        : moment(new Date()).tz("Asia/Kolkata").format("DD-MM-YYYY");
       updateNextSearchIndex();
       const centers = await getSchedule(
         token,
