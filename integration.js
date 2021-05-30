@@ -136,9 +136,9 @@ async function takeUserToAppointmentScreen() {
   console.log("executing evaluate");
   console.log(config);
   await selectAllBeneficiary(config.beneficiaryIds);
-  if(config.dose == 1) {
-    await currentPage.click(selectors.scheduleAppointmentButton);
-  }
+  // if(config.dose == 1) {
+  //   await currentPage.click(selectors.scheduleAppointmentButton);
+  // }
 }
 
 async function selectAllBeneficiary(beneficiaries){
