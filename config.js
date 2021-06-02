@@ -1,6 +1,6 @@
 export default {
   userPhoneNumber: "8123327941",
-  pollFrequency: 5000,
+  pollFrequency: 3000,
   beneficiaryIds: ["63597472181760"],
   dose: 1,
   vaccines: ["COVAXIN", "COVISHIELD"],
@@ -12,4 +12,5 @@ export default {
   minAge: 27,
   lifeLineBackend: "https://rocky-eyrie-37601.herokuapp.com",
   cowinBackend: "https://cdn-api.co-vin.in",
+  desktopNotificationForMessage: true,
 };

@@ -91,6 +91,12 @@ async function initializeBrowser() {
   await sleep(2000);
   await currentPage.type(selectors.mobileInput, config.userPhoneNumber);
   await currentPage.click(selectors.getOtp);
+  if(config.desktopNotificationForMessage) {
+      playerInitialized.play("got-it-done-613.mp3", function (err) {
+        if (err) console.log(err);
+      });
+  }
+
   //   await page.waitForNavigation();
   console.log("executing evaluate");
 }
